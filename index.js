@@ -1,7 +1,69 @@
 const express = require('express');
 const app = express();
 const port = 8000;
+const file = require(`./routes/ReadWriteLoad.js`)
+// Check if class exists
+/*
+if exists then update {
+    load
+    process data(json.parse) lol 
+    check if the student exists
+    if student exists {
+        Rewrite Student Data
+    }
+    if not 
+    push all that data into an arr
 
+    Once we are done we will save into JSON OBJECT
+}
+response.send should look like
+{
+    added: {req.query.name, req.query.age, req.query.city, req.query.grade}
+    class: req.query.class
+}
+*/
+app.get('/class/add',(req,res)=>{
+    const students = [];
+    const currentStudent = {
+        name: req.query.name,
+        age: req.query.age,
+        city: req.query.city,
+        grade: req.query.grade,
+    };
+    students.push(currentStudent);
+    let currentData = {
+        students: students,
+        class : req.query.class,
+    }
+       
+    file.load(req.query.class,JSON.stringify(currentData),(data,classname)=>{
+        data = JSON.parse(data);
+     currentData = data;
+     currentData.students.push(students[0]);
+    file.save(req.query.class,JSON.stringify(currentData),(data)=>{
+        res.send({
+            added: {name:req.query.name,age:req.query.age,city:req.query.city,grade:req.query.grade},
+            'class': req.query.class
+        })
+    })
+    
+    })
+    
+})
 app.listen(port,()=>{
     console.log(`listening on ${port}`);
 })
+/*
+{
+  students: [
+    { name: 'John', age: 30, city: 'NYC', grade: 75 },
+    { name: 'Emily', age: 28, city: 'LA', grade: 80 }
+  ]
+}
+// load class file using req.query.class
+[{req.query.name for name
+req.query.age for age
+req.query.city for city
+req.query.grade for grade}]
+ // path will be './classes/${req.query.classname}'
+*/
