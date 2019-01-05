@@ -50,6 +50,26 @@ app.get('/class/add',(req,res)=>{
     })
     
 })
+    app.get(`/class/list`,(req,res)=>{
+    console.log('Welcome to your list');
+    let currentData;
+    file.readOnly(req.query.class,(data,err)=>{
+        if (err){
+            res.send({
+               message:`${req.query.class} is not a valid class name` 
+            })
+        }
+        data = JSON.parse(data);
+        currentData = data;
+        console.log(currentData);
+       res.send({
+        students: currentData.students,
+    })
+    })
+
+   
+})
+
 app.listen(port,()=>{
     console.log(`listening on ${port}`);
 })

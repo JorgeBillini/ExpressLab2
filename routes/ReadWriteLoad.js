@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const load = (classname,filedata, cb) => {
+const load = (classname,filedata,cb) => {
     console.log('LOADING');
     fs.readFile(`./classes/${classname}.json`,(err,data)=>{
         if(err){
@@ -18,8 +18,19 @@ const save = (className,data,cb) =>{
         cb(data);
     })
 }
+const readOnly = (className, cb) =>{
+    console.log('READING');
+    fs.readFile(`./classes/${className}.json`,(err,data)=>{
+        if (err){
+            console.log('error',err);
+            cb(data,err)
+        }
+       else  cb(data,err);
+    })
+}
 
 module.exports = { 
     save,
     load,
+    readOnly,
 }
