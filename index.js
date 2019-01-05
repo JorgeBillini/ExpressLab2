@@ -50,7 +50,7 @@ app.get('/class/add',(req,res)=>{
     })
     
 })
-    app.get(`/class/list`,(req,res)=>{
+     app.get(`/class/list`,(req,res)=>{
     console.log('Welcome to your list');
     let currentData;
     file.readOnly(req.query.class,(data,err)=>{
@@ -69,8 +69,31 @@ app.get('/class/add',(req,res)=>{
 
    
 })
+// req.query.class && req.query.city
+    app.get(`/class/listfromcity`,(req,res)=>{
+        let currentData;
+    file.readOnly(req.query.class,(data,err)=>{
+        if (err){
+            res.send({
+               message:`${req.query.class} is not a valid class name` 
+            })
+        }
+        data = JSON.parse(data);
+        currentData = data;
+        console.log(currentData);
+        let filteredObj = {
+            students : []
+        }
+        for ( let i = 0 ; i < currentData.students.length; i++){
+            if (req.query.class === currentData.class && req.query.city === currentData.students[i].city){
+                filteredObj.students.push(currentData.students[i]);
+            }
+        }
+       res.send(filteredObj);
+    })
+    })
 
-app.listen(port,()=>{
+    app.listen(port,()=>{
     console.log(`listening on ${port}`);
 })
 /*
