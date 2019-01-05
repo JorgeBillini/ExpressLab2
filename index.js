@@ -61,8 +61,7 @@ app.get('/class/add',(req,res)=>{
         }
         data = JSON.parse(data);
         currentData = data;
-        console.log(currentData);
-       res.send({
+        res.send({
         students: currentData.students,
     })
     })
@@ -80,7 +79,6 @@ app.get('/class/add',(req,res)=>{
         }
         data = JSON.parse(data);
         currentData = data;
-        console.log(currentData);
         let filteredObj = {
             students : []
         }
@@ -92,6 +90,29 @@ app.get('/class/add',(req,res)=>{
        res.send(filteredObj);
     })
     })
+    app.get(`/class/listfailing`,(req,res)=>{
+        let currentData;
+    file.readOnly(req.query.class,(data,err)=>{
+        if (err){
+            res.send({
+               message:`${req.query.class} is not a valid class name` 
+            })
+        }
+        data = JSON.parse(data);
+        currentData = data;
+        let filteredObj = {
+            students : []
+        }
+        for ( let i = 0 ; i < currentData.students.length; i++){
+            let currentGrade = parseInt(currentData.students[i].grade);
+            if (req.query.class === currentData.class && currentGrade < 60 ){
+                filteredObj.students.push(currentData.students[i]);
+            }
+        }
+       res.send(filteredObj);
+    })
+    })
+    
 
     app.listen(port,()=>{
     console.log(`listening on ${port}`);
